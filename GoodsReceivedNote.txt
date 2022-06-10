@@ -1,18 +1,19 @@
 public class GoodsReceivedNote {
     String supplier;
     String receiving;
-    String orderNo;
+    double orderNo;
     String date;
     String productName;
     String unit;
-    String qtyOrdered;
-    String qtyReceived;
-    String unitCost;
-    String totalValue;
+    double qtyOrdered;
+    double qtyReceived;
+    double unitCost;
+    double totalValue;
 
-    public GoodsReceivedNote(String supplier, String receiving, String orderNo, String date, String productName,
-                             String unit, String qtyOrdered, String qtyReceived, String unitCost,
-                             String totalValue) {
+
+    public GoodsReceivedNote(String supplier, String receiving, double orderNo, String date, String productName,
+                             String unit, double qtyOrdered, double qtyReceived, double unitCost,
+                             double totalValue) {
         this.supplier = supplier;
         this.receiving = receiving;
         this.orderNo = orderNo;
@@ -57,11 +58,11 @@ public class GoodsReceivedNote {
         this.receiving = receiving;
     }
 
-    public String getOrderNo() {
+    public double getOrderNo() {
         return orderNo;
     }
 
-    public void setOrderNo(String orderNo) {
+    public void setOrderNo(double orderNo) {
         this.orderNo = orderNo;
     }
 
@@ -89,36 +90,38 @@ public class GoodsReceivedNote {
         this.unit = unit;
     }
 
-    public String getQtyOrdered() {
+    public double getQtyOrdered() {
         return qtyOrdered;
     }
 
-    public void setQtyOrdered(String qtyOrdered) {
+    public void setQtyOrdered(double qtyOrdered) {
         this.qtyOrdered = qtyOrdered;
     }
 
-    public String getQtyReceived() {
+    public double getQtyReceived() {
         return qtyReceived;
     }
 
-    public void setQtyReceived(String qtyReceived) {
+    public void setQtyReceived(double qtyReceived) {
         this.qtyReceived = qtyReceived;
     }
 
-    public String getUnitCost() {
+    public double getUnitCost() {
         return unitCost;
     }
 
-    public void setUnitCost(String unitCost) {
+    public void setUnitCost(double unitCost) {
         this.unitCost = unitCost;
     }
 
-    public String getTotalValue() {
+    public double getTotalValue() {
         return totalValue;
     }
 
-    public void setTotalValue(String totalValue) {
+    public void setTotalValue(double totalValue) {
         this.totalValue = totalValue;
     }
 }
+
+
 
