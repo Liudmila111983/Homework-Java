@@ -1,40 +1,39 @@
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+/*
+Программа содержит форму ввода счета-фактуры.
+Производит автоматический расчет totalValue и добавляет значение в коллекцию.
+Выводит в консоль новую счет-фактуру.
+Выводит в консоль весь перечень счетов-фактур.
+Отображает список всех товаров.
+Выводит в консоль список внешних поставщиков.
+Через консоль запрашивает наименование товара, который необходимо найти на складе.
+Осуществляет поиск товаров на складе по названию.
+*/
+
+
 public class Program {
+    private static Arrays collection;
+
     public static void main(String[] args) {
         // Коллекция счета-фактур
         ArrayList<GoodsReceivedNote> goodsReceivedNoteList = new ArrayList<>();
-        GoodsReceivedNote invoice1 = new GoodsReceivedNote("M&M", "Mila", "1",
-                "2022-05-02", "Shower gel", "piece", "2", "2",
-                "12", "24");
-        GoodsReceivedNote invoice2 = new GoodsReceivedNote("Stock 1", "Mila", "2",
-                "2022-05-15", "Shampoo", "piece", "10", "10",
-                "15", "150");
-        GoodsReceivedNote invoice3 = new GoodsReceivedNote("Stock 2", "Mila", "3",
-                "2022-05-26", "Washing powder", "piece", "5", "5",
-                "45", "225");
+        GoodsReceivedNote invoice1 = new GoodsReceivedNote("M&M", "Mila", 1,
+                "2022-05-02", "Shower gel", "piece", 2, 2,
+                12, 24);
+        GoodsReceivedNote invoice2 = new GoodsReceivedNote("Stock 1", "Mila", 2,
+                "2022-05-15", "Shampoo", "piece", 10, 10,
+                15, 150);
+        GoodsReceivedNote invoice3 = new GoodsReceivedNote("Stock 2", "Mila", 3,
+                "2022-05-26", "Washing powder", "piece", 5, 5,
+                45, 225);
         goodsReceivedNoteList.add(invoice1);
         goodsReceivedNoteList.add(invoice2);
         goodsReceivedNoteList.add(invoice3);
 
         inputDatas(goodsReceivedNoteList);
-
-        //Поиск товаров на складе по названию
-        Scanner in = new Scanner(System.in);
-        System.out.println("Input product name: ");
-        String productName = in.nextLine();
-
-        ArrayList<GoodsReceivedNote> goods = getGoods(goodsReceivedNoteList, (GoodsReceivedNote g) ->
-                g.getProductName().equalsIgnoreCase(productName));
-        ArrayList<GoodsReceivedNote> goodsInStock = getGoodsInStock(goods,
-                (GoodsReceivedNote g1) -> g1.getSupplier().equalsIgnoreCase("Stock"));
-        ArrayList<GoodsReceivedNote> goodsInStock1 = getGoodsInStock(goods,
-                (GoodsReceivedNote g1) -> g1.getSupplier().equalsIgnoreCase("Stock 1"));
-        ArrayList<GoodsReceivedNote> goodsInStock2 = getGoodsInStock(goods,
-                (GoodsReceivedNote g1) -> g1.getSupplier().equalsIgnoreCase("Stock 2"));
-        System.out.println("Goods in stock: " + goodsInStock + goodsInStock1 + goodsInStock2);
+        getGoodsInStock(goodsReceivedNoteList);
     }
 
     public static void inputDatas(ArrayList<GoodsReceivedNote> goodsReceivedNoteList) {
@@ -59,7 +58,8 @@ public class Program {
         System.out.println("To (Receiving): ");
         String receiving = in.nextLine();
         System.out.println("Order No: ");
-        String orderNo = in.nextLine();
+        double orderNo = in.nextDouble();
+        in.nextLine();
         System.out.println("Date (YYYY-MM-DD): ");
         String date = in.nextLine();
         System.out.println("Product Name: ");
@@ -68,14 +68,17 @@ public class Program {
         System.out.println("Unit: ");
         String unit = in.nextLine();
         System.out.println("Qty Ordered: ");
-        String qtyOrdered = in.nextLine();
+        double qtyOrdered = in.nextDouble();
+        in.nextLine();
         System.out.println("Qty Received: ");
-        String qtyReceived = in.nextLine();
+        double qtyReceived = in.nextDouble();
+        in.nextLine();
         System.out.println("Unit Cost: ");
-        String unitCost = in.nextLine();
-        System.out.println("Total Value: ");
-        String totalValue = in.nextLine();
+        double unitCost = in.nextDouble();
+        in.nextLine();
+
         // Отображение новой счет-фактуры
+        double totalValue = qtyReceived * unitCost;
         System.out.printf("New invoice{" +
                 "Supplier='" + supplier + '\'' +
                 ", Receiving='" + receiving + '\'' +
@@ -94,54 +97,42 @@ public class Program {
         goodsReceivedNoteList.add(invoice);
 
         // Отображение списка всех счет-фактур
-        System.out.println("List of invoices: " + goodsReceivedNoteList);
+        System.out.println("List of invoices: ");
+        goodsReceivedNoteList.forEach(System.out::println);
 
         // Отображение списка всех товаров на складе
         System.out.println("List goods in stock: " + allGoodsInStock);
 
         // Отображение списка внешних поставщиков
-        List<String> externalSuppliers = suppliers.stream().filter((s) -> !s.contains("Stock"))
-                .collect(Collectors.toList());
+        List<String> externalSuppliers = suppliers.stream().filter((s) -> !s.contains("Stock")).toList();
         System.out.println("List of external suppliers: " + externalSuppliers);
-
-    }
-    
-    public static ArrayList<GoodsReceivedNote> getGoods (ArrayList<GoodsReceivedNote>
-                  goodsReceivedNoteArrayList, Predicate<GoodsReceivedNote> predicate){
-        ArrayList<GoodsReceivedNote> result = new ArrayList<>();
-        for (GoodsReceivedNote goods : goodsReceivedNoteArrayList)
-            if (predicate.test(goods))
-                result.add(goods);
-        return result;
-        }
-
-        public static ArrayList<GoodsReceivedNote> getGoodsInStock (ArrayList<GoodsReceivedNote>
-                goods, Predicate<GoodsReceivedNote> predicate){
-        ArrayList<GoodsReceivedNote> result1 = new ArrayList();
-        for (GoodsReceivedNote goodsInStock : goods)
-            if (predicate.test(goodsInStock))
-                result1.add(goodsInStock);
-        return result1;
-        }
-
-
-    public static ArrayList<GoodsReceivedNote> getGoodsInStock1 (ArrayList<GoodsReceivedNote>
-                                              goods, Predicate<GoodsReceivedNote> predicate){
-        ArrayList<GoodsReceivedNote> result1 = new ArrayList();
-        for (GoodsReceivedNote goodsInStock : goods)
-            if (predicate.test(goodsInStock))
-                result1.add(goodsInStock);
-        return result1;
     }
 
-    public static ArrayList<GoodsReceivedNote> getGoodsInStock2 (ArrayList<GoodsReceivedNote>
-                                               goods, Predicate<GoodsReceivedNote> predicate){
-        ArrayList<GoodsReceivedNote> result1 = new ArrayList();
-        for (GoodsReceivedNote goodsInStock : goods)
-            if (predicate.test(goodsInStock))
-                result1.add(goodsInStock);
-        return result1;
+    public static void getGoodsInStock(ArrayList<GoodsReceivedNote> goodsReceivedNoteList){
+        //Поиск товаров на складе по названию
+        Scanner in = new Scanner(System.in);
+        System.out.println("Input product name: ");
+        String productName = in.nextLine();
+
+        ArrayList<GoodsReceivedNote> goods = (ArrayList<GoodsReceivedNote>) goodsReceivedNoteList.stream()
+                .filter(g -> g.getProductName().equalsIgnoreCase(productName))
+                .collect(Collectors.toList());
+        List<GoodsReceivedNote> goodsInStock = goods.stream()
+                .filter(g -> g.getSupplier().equalsIgnoreCase("Stock"))
+                .collect(Collectors.toList());
+        List<GoodsReceivedNote> goodsInStock1 = goods.stream()
+                .filter(g -> g.getSupplier().equalsIgnoreCase("Stock 1"))
+                .collect(Collectors.toList());
+        List<GoodsReceivedNote> goodsInStock2 = goods.stream()
+                .filter(g -> g.getSupplier().equalsIgnoreCase("Stock 2"))
+                .collect(Collectors.toList());
+
+        System.out.println("Goods in stock: \n" + goodsInStock + "\n" +
+                goodsInStock1 + "\n" + goodsInStock2);
     }
 }
+
+
+
 
 
